@@ -1,0 +1,38 @@
+%%{init: {"flowchart": {"rankSpacing": 28, "nodeSpacing": 30, "wrappingWidth": 320}}}%%
+flowchart TB
+    subgraph L[" "]
+        direction LR
+        L1[Пациент]:::patient ~~~ L2[Администратор]:::admin ~~~ L3[МИС]:::mis
+    end
+    L ~~~ P1
+
+    P1([Нужен приём]):::patient
+    P2[Звонит в клинику]:::patient
+    A1{Линия свободна?}:::admin
+    A2[Отвечает на звонок]:::admin
+    P3[Называет врача и удобное время]:::patient
+    A3[Ищет свободные слоты в МИС]:::admin
+    M1[Показывает расписание врача]:::mis
+    A4{Есть подходящее время?}:::admin
+    A5[Вносит запись в МИС вручную]:::admin
+    M2[Сохраняет запись]:::mis
+    P4([Записан]):::patient
+    P5([Отказался от записи]):::patient
+    A6[За день до приёма звонит пациенту с напоминанием]:::admin
+    P6{Пациент пришёл?}:::patient
+    P7([Приём состоялся]):::patient
+    P8([Неявка: время врача потеряно]):::patient
+
+    P1 --> P2 --> A1
+    A1 -- "Нет, 18% звонков" --> P5
+    A1 -- Да --> A2 --> P3 --> A3 --> M1 --> A4
+    A4 -- Нет --> P5
+    A4 -- Да --> A5 --> M2 --> P4
+    P4 -.-> A6 --> P6
+    P6 -- Да --> P7
+    P6 -- "Нет, 14% записей" --> P8
+
+    classDef patient fill:#dbeafe,stroke:#2563eb,color:#0b1b3a
+    classDef admin fill:#fef3c7,stroke:#d97706,color:#3b2405
+    classDef mis fill:#f1f5f9,stroke:#64748b,color:#0f172a
+    style L fill:none,stroke:none

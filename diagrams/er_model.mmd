@@ -1,0 +1,61 @@
+erDiagram
+    BRANCH ||--o{ DOCTOR_BRANCH : "работают"
+    DOCTOR ||--o{ DOCTOR_BRANCH : "принимает в"
+    SPECIALTY ||--o{ DOCTOR : "имеет"
+    DOCTOR ||--o{ SLOT : "расписание"
+    BRANCH ||--o{ SLOT : "проходит в"
+    SLOT ||--o| APPOINTMENT : "занят"
+    PATIENT ||--o{ APPOINTMENT : "записан"
+    APPOINTMENT ||--o{ NOTIFICATION : "уведомления"
+
+    BRANCH {
+        int branch_id PK
+        string name
+        string address
+        string phone
+    }
+    SPECIALTY {
+        int specialty_id PK
+        string name
+    }
+    DOCTOR {
+        int doctor_id PK
+        int specialty_id FK
+        string full_name
+        int experience_years
+        string photo_url
+    }
+    DOCTOR_BRANCH {
+        int doctor_id FK
+        int branch_id FK
+    }
+    SLOT {
+        int slot_id PK
+        int doctor_id FK
+        int branch_id FK
+        datetime start_at
+        int duration_min
+        bool is_reserved
+    }
+    PATIENT {
+        int patient_id PK
+        string phone
+        string full_name
+        date birth_date
+    }
+    APPOINTMENT {
+        int appointment_id PK
+        int slot_id FK
+        int patient_id FK
+        string status
+        string source
+        datetime created_at
+        string comment
+    }
+    NOTIFICATION {
+        int notification_id PK
+        int appointment_id FK
+        string type
+        datetime sent_at
+        string delivery_status
+    }

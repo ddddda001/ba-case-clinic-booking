@@ -1,0 +1,19 @@
+sequenceDiagram
+    autonumber
+    participant S as Сервис записи
+    participant SMS as SMS-провайдер
+    actor P as Пациент
+    participant MIS as МИС
+
+    S->>SMS: Напоминание за 24 ч (дата, врач, адрес, ссылка)
+    SMS->>P: SMS
+    alt Пациент отменяет
+        P->>S: Переход по ссылке → «Отменить запись»
+        S->>MIS: POST /appointments/{id}/cancel
+        MIS-->>S: 200 OK
+        S->>SMS: Подтверждение отмены
+        SMS->>P: «Запись отменена»
+    else Пациент ничего не делает
+        S->>SMS: Напоминание за 2 ч
+        SMS->>P: SMS
+    end

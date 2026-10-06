@@ -1,0 +1,37 @@
+%%{init: {"flowchart": {"rankSpacing": 28, "nodeSpacing": 30, "wrappingWidth": 320}}}%%
+flowchart TB
+    subgraph L[" "]
+        direction LR
+        L1[Пациент]:::patient ~~~ L2[Сервис онлайн-записи]:::service ~~~ L3[МИС]:::mis
+    end
+    L ~~~ P1
+
+    P1([Нужен приём]):::patient
+    P2[Выбирает филиал, специальность и врача]:::patient
+    S1[Запрашивает свободные слоты]:::service
+    M1[Отдаёт расписание врача]:::mis
+    S2[Показывает свободные слоты]:::service
+    P3[Выбирает время]:::patient
+    P4[Вводит телефон и код из SMS]:::patient
+    S3{Слот ещё свободен?}:::service
+    M2[Сохраняет запись]:::mis
+    S4[Отправляет SMS-подтверждение]:::service
+    P5([Записан]):::patient
+    S5[Отправляет напоминания за 24 ч и за 2 ч]:::service
+    P6{Планы изменились?}:::patient
+    P7[Отменяет или переносит запись в личном кабинете]:::patient
+    P8([Приходит на приём]):::patient
+    S6[Передаёт отмену или перенос в МИС]:::service
+    M3[Освобождает слот для других пациентов]:::mis
+
+    P1 --> P2 --> S1 --> M1 --> S2 --> P3 --> P4 --> S3
+    S3 -- "Нет, слот заняли" --> S2
+    S3 -- Да --> M2 --> S4 --> P5
+    P5 -.-> S5 --> P6
+    P6 -- Нет --> P8
+    P6 -- Да --> P7 --> S6 --> M3
+
+    classDef patient fill:#dbeafe,stroke:#2563eb,color:#0b1b3a
+    classDef service fill:#dcfce7,stroke:#16a34a,color:#052e16
+    classDef mis fill:#f1f5f9,stroke:#64748b,color:#0f172a
+    style L fill:none,stroke:none
